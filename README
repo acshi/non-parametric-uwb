@@ -1,0 +1,39 @@
+Data and source code files for "Non-parametric Error Modeling for Ultra-wideband Localization Networks"
+
+This project is built using the meson/ninja build system, but the main code has no other dependencies.
+Figures where made in Python with numpy and matplotlib.
+
+Dataset5.txt is very similar to dataset4.txt and is only included because it had a particularly
+interesting/convoluted distribution used in one of the figures.
+
+To recreate figures from the paper, run `bash do_everything.sh`, which will install dependencies,
+make the program, preprocess the datasets, perform the evaluations, and create the figures.
+
+Notes on the datasets:
+The robot has node id 16.
+Ground truth positions are in feet and are (by node id):
+8: (0, 0)
+12: (15, 1)
+14: (2, 9)
+16: N/A
+54: (20, 3)
+61: (10, 0)
+81: (17, 7)
+87: (8, 8)
+
+Datasets have the following columns:
+time_of_propagation node_id_a node_id_b temperature_1 pp_amp_1 impulse_pwr_1 std_noise_1 fp_power_1 rx_power1
+                                        temperature_2 pp_amp_2 impulse_pwr_2 std_noise_2 fp_power_2 rx_power2
+                                        temperature_3 pp_amp_3 impulse_pwr_3 std_noise_3 fp_power_3 rx_power3
+We only used the first three columns of information for our paper, but the rest is included for completeness.
+The meaning of these additional data is best described by the DW1000 user manual.
+There are three sets of columns for the later parameters. As we use double-sided two-way-ranging,
+communication goes as follows. (1)A -> B. (2)B -> A. (3)A -> B. (4)B -> A.
+The three sets of columns correspond to the receive (rx) information of the messages sent in (1), (2), and (3).
+The only reason message (4) is sent is to relay receive information of message (3) back to node A.
+
+Dataset 1 actually has an abundance of data: roughly 4096 measurements per link, instead of 1024.
+Datasets 1, 2, and 3 also contain extra measurements from node 16 to all the other nodes.
+Each time these repeat, the robot has moved to a new position.
+While we thought this extra information might have improved, results,
+we didn't actually see that happen, and so left that out of the paper.
