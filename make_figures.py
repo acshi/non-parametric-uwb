@@ -36,7 +36,7 @@ for sweep_i in range(len(sweeps)):
         if sweep == "by-measurements":
             plt.xscale("log")
             plt.violinplot(rmse_by_v, uniq_vs, widths=[n/3 for n in uniq_vs], showmeans=True)
-            plt.ylim(ymax = 0.5)
+            plt.ylim(top = 0.5)
         else:
             x_vars = [x_variables[sweep_i][int(v)] for v in uniq_vs]
             if sweep == "by-delay-sigma":

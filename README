@@ -35,5 +35,5 @@ The only reason message (4) is sent is to relay receive information of message (
 Dataset 1 actually has an abundance of data: roughly 4096 measurements per link, instead of 1024.
 Datasets 1, 2, and 3 also contain extra measurements from node 16 to all the other nodes.
 Each time these repeat, the robot has moved to a new position.
-While we thought this extra information might have improved, results,
+While we thought this extra information might have improved results,
 we didn't actually see that happen, and so left that out of the paper.
