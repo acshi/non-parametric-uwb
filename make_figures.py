@@ -7,6 +7,7 @@ import math
 import csv
 
 plt.rcParams.update({'font.size': 14})
+plt.rcParams['pdf.fonttype'] = 42
 
 sweeps = ["by-measurements", "by-delay-sigma", "by-delay-mean"]
 sweep_labels = ["Number of measurements per edge", r"$\sigma_{\mathrm{delay}}$ ($\mathrm{\mu s}$)", r"$\mu_{\mathrm{delay}}$ ($\mathrm{\mu s}$)"]
@@ -87,8 +88,8 @@ plt.tight_layout()
 plt.savefig("figures/delay_mean_recovery.pdf", bbox_inches = "tight", pad_inches = 0)
 
 plt.clf()
-methods = ["", "--first-peak", "--max-peak", "--triangulation", "--fixed-delays"]
-method_labels = ["Our method", "First peak", "Max peak", "Triangulation", "Fixed delays"]
+methods = ["", "--first-peak", "--max-peak", "--triangulation", "--fixed-delays", "--manual-delays"]
+method_labels = ["Our method", "First peak", "Max peak", "Triangulation", "Fixed delays", "Manual delays"]
 for method_i in range(len(methods)):
     method = methods[method_i]
     data = []
@@ -97,10 +98,10 @@ for method_i in range(len(methods)):
         data += [np.genfromtxt("evaluations/{}_{}.csv".format(evaluation, method[2:]))]
     data = np.array(data)
     plt.violinplot(data.T, np.add([1, 2, 3, 4], (method_i-2)*0.13), widths=0.18, showmeans=True)
-plt.ylim(ymax = 0.45, ymin = 0)
+plt.ylim(top = 0.45, bottom = 0)
 plt.ylabel("RMSE (m)")
 plt.xlabel("Data set")
-colors = ['blue', 'orange', 'green', 'red', 'purple']
+colors = ['blue', 'orange', 'green', 'red', 'purple', 'brown']
 fake_handles = [mlines.Line2D([], [], color=c) for c in colors]
 plt.legend(fake_handles, method_labels, loc="upper left")
 plt.yticks(np.arange(0, 0.41, 0.1))

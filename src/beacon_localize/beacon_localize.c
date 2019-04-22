@@ -99,6 +99,7 @@ typedef struct {
     bool max_peak;
     bool triangulation_only;
     bool fixed_delays;
+    bool manual_delays;
     int eval_run_i;
     double ground_truth_xs[32];
     double ground_truth_ys[32];
@@ -803,6 +804,38 @@ void calc_normal(double *coords, int *is, double *normal)
     normal[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
 
+void set_manual_delays(beacon_localize_state_t *state)
+{
+    for (int i = 0; i < state->n_beacons; i++) {
+        switch (state->ids[i]) {
+            case 8:
+                state->delays[i] = 0.515375;
+                break;
+            case 12:
+                state->delays[i] = 0.515547;
+                break;
+            case 14:
+                state->delays[i] = 0.515818;
+                break;
+            case 16:
+                state->delays[i] = 0.515717;
+                break;
+            case 54:
+                state->delays[i] = 0.515316;
+                break;
+            case 61:
+                state->delays[i] = 0.515541;
+                break;
+            case 81:
+                state->delays[i] = 0.515397;
+                break;
+            case 87:
+                state->delays[i] = 0.515345;
+                break;
+        }
+    }
+}
+
 void resolve_symmetry_ambiguity(beacon_localize_state_t *state, double *coords)
 {
     // look for how many locations we have of the self_id, as from the "robot dance"
@@ -842,6 +875,10 @@ double update_estimation(beacon_localize_state_t *state)
 {
     if (state->use_measurement_density) {
         calculate_measurement_densities(state);
+    }
+
+    if (state->manual_delays) {
+        set_manual_delays(state);
     }
 
     int n_locs = state->n_locs;
@@ -1120,7 +1157,8 @@ void init_state(beacon_localize_state_t *state)
     state->evaluate_by_delay_sigma = getopt_get_bool(state->gopt, "by-delay-sigma");
 
     state->eval_run_i = getopt_get_int(state->gopt, "eval-run-i");
-    state->fixed_delays = getopt_get_bool(state->gopt, "fixed-delays");
+    state->manual_delays = getopt_get_bool(state->gopt, "manual-delays");
+    state->fixed_delays = getopt_get_bool(state->gopt, "fixed-delays") || state->manual_delays;
 
     if (getopt_get_bool(state->gopt, "first-peak")) {
         state->first_peak = true;
@@ -1734,6 +1772,7 @@ int main(int argc, char **argv)
     getopt_add_bool(gopt, '\0', "by-delay-mean", 0, "Parameterize evaluation by antenna delay prior mean");
     getopt_add_bool(gopt, '\0', "by-delay-sigma", 0, "Parameterize evaluation by antenna delay prior standard deviation");
     getopt_add_bool(gopt, '\0', "fixed-delays", 0, "Hold antenna delays to the nominal value; do not optimize");
+    getopt_add_bool(gopt, '\0', "manual-delays", 0, "Hold antenna delays to manuall calibrated values; do not optimize");
     getopt_add_bool(gopt, '\0', "old", 0, "Do evaluation by old peak estimation method");
     getopt_add_bool(gopt, '\0', "first-peak", 0, "Do evaluation by first-peak method");
     getopt_add_bool(gopt, '\0', "max-peak", 0, "Do evaluation by max-peak method");

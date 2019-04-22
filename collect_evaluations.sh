@@ -40,7 +40,7 @@ do
     done
 done
 
-methods=("" "--first-peak" "--max-peak" "--triangulation" "--fixed-delays")
+methods=("" "--first-peak" "--max-peak" "--triangulation" "--fixed-delays" "--manual-delays")
 for evaluation in "${evaluations[@]}"
 do
     for method in "${methods[@]}"
